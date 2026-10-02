@@ -1,18 +1,69 @@
 import wollok.game.*
+import example.*
 
-import example.pepita
+program corsaGame {
+	game.title("Corsa")
+	game.height(15)
+	game.width(15)
 
-program PepitaGame {
-	game.title("Pepita")
-	game.height(10)
-	game.width(10)
+	const corsa1 = tipoDeRodado.crearCorsa("Rojo", game.at(1, 1))
+	const corsa2 = tipoDeRodado.crearCorsa("Rojo", game.at(1, 3))
+	const corsa3 = tipoDeRodado.crearCorsa("Rojo", game.at(1, 5))
 
-	// add assets in asset folder, for example, for the background
-  // game.boardGround("fondo2.jpg")
+	game.addVisual(corsa1)
+	game.addVisual(corsa2)
+	game.addVisual(corsa3)
+	game.addVisual(paredLadrillos)
 
-	//
+	var autoActivo = corsa1
 
-	game.showAttributes(pepita) //Debug
+	keyboard.num1().onPressDo {
+		autoActivo = corsa1
+	}
+	keyboard.num2().onPressDo {
+		autoActivo = corsa2
+	}
+	keyboard.num3().onPressDo {
+		autoActivo = corsa3
+	}
+
+	keyboard.right().onPressDo({
+		const nuevaPosicion = autoActivo.moverDerecha()
+		if (nuevaPosicion != paredLadrillos.position()) {
+			autoActivo.moverA(nuevaPosicion)
+		}
+	})
+	keyboard.left().onPressDo({
+		const nuevaPosicion = autoActivo.moverIzquierda()
+		if (nuevaPosicion != paredLadrillos.position()) {
+			autoActivo.moverA(nuevaPosicion)
+		}
+	})
+	keyboard.up().onPressDo({
+		const nuevaPosicion = autoActivo.subir()
+		if (nuevaPosicion != paredLadrillos.position()) {
+			autoActivo.moverA(nuevaPosicion)
+		}
+	})
+	keyboard.down().onPressDo({
+		const nuevaPosicion = autoActivo.bajar()
+		if (nuevaPosicion != paredLadrillos.position()) {
+			autoActivo.moverA(nuevaPosicion)
+		}
+	})
+
+	keyboard.r().onPressDo({
+		autoActivo.cambiarARojo()
+	})
+	keyboard.a().onPressDo({
+		autoActivo.cambiarAAzul()
+	})
+	keyboard.v().onPressDo({
+		autoActivo.cambiarAVerde()
+	})
+
+
+	game.onCollideDo(autoActivo, {e => e.chocar()})
 
 	game.start()
 }

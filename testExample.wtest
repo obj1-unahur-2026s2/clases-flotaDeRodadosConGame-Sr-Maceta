@@ -1,9 +1,92 @@
-import example.pepita
+import example.*
 
-describe "group of tests for pepita" {
+describe "Rodados y Dependecias" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+  test "Test en el que hay que se definen dos dependencias: deportes (45 empleados) y cultura (31 empleados)." {
+    const deportes = new Dependencia(empleados = 45)
+    const cultura = new Dependencia(empleados = 31)
+
+    const cachito = tipoDeRodado.crearCorsa("Rojo", game.origin())
+    const corsaAzul = tipoDeRodado.crearCorsa("Azul", game.origin())
+    const corsaVerde = tipoDeRodado.crearCorsa("Verde", game.origin())
+    const kwidConTanque1 = tipoDeRodado.crearKwidConTanqueAdicional()
+    const autoEspecial = tipoDeRodado.crearRodadoEspecial(5, 160, "beige", 1200)
+    
+    deportes.agregarAFlota(cachito)
+    deportes.agregarAFlota(corsaAzul)
+    deportes.agregarAFlota(corsaVerde)
+    deportes.agregarAFlota(kwidConTanque1)
+    deportes.agregarAFlota(autoEspecial)
+    
+    assert.equals((1300*3)+(1200+1200+150), deportes.pesoTotalFlota())
+    assert.that(deportes.estaBienEquipada())
+    assert.equals((4+3), deportes.capacidadTotalEnColor("Azul"))
+    assert.equals("beige", deportes.colorDelRodadoMasRapido())
+    assert.equals(25, deportes.capacidadFaltante())
+    assert.that(deportes.esGrande())
+
+    const kwidConTanque2 = tipoDeRodado.crearKwidConTanqueAdicional()
+    const kwidConTanque3 = tipoDeRodado.crearKwidConTanqueAdicional()
+    const kwidSinTanque = tipoDeRodado.crearKwidSinTanqueAdicional()
+
+    trafic.cambiarInterior(popular)
+    trafic.cambiarMotor(bataton)
+
+    cultura.agregarAFlota(cachito)
+    cultura.agregarAFlota(kwidConTanque2)
+    cultura.agregarAFlota(kwidConTanque3)
+    cultura.agregarAFlota(kwidSinTanque)
+    cultura.agregarAFlota(trafic)
+
+    assert.equals((1300)+(1350*2)+(1200)+(4000+1000+500), cultura.pesoTotalFlota())
+    assert.notThat(cultura.estaBienEquipada())
+    assert.equals((3+3+4), cultura.capacidadTotalEnColor("Azul"))
+    assert.equals("Rojo", cultura.colorDelRodadoMasRapido())
+    assert.equals(5, cultura.capacidadFaltante())
+    assert.notThat(cultura.esGrande())
   }
+  test "Pedidos" {
+    const cachito = tipoDeRodado.crearCorsa("Rojo", game.origin())
 
+    const pedido1ColoresIncompatibles = #{ "Negro", "Azul" }
+    const pedido1 = tipoDePedido.crearPedido(960, 8, 4, pedido1ColoresIncompatibles)
+    const pedido2ColoresIncompatibles = #{ "Rojo", "Azul" }
+    const pedido2 = tipoDePedido.crearPedido(960, 8, 4, pedido2ColoresIncompatibles)
+    const pedido3 = tipoDePedido.crearPedido(960, 8, 6, pedido1ColoresIncompatibles)
+    const pedido4 = tipoDePedido.crearPedido(960, 6, 4, pedido1ColoresIncompatibles)
+    assert.that(pedido1.puedeSatisfacerPedido(cachito))
+    assert.notThat(pedido2.puedeSatisfacerPedido(cachito))
+    assert.notThat(pedido3.puedeSatisfacerPedido(cachito))
+    assert.notThat(pedido4.puedeSatisfacerPedido(cachito))
+  }
+  test "Registro de pedidos" {
+    const pedido1ColoresIncompatibles = #{ "Negro", "Azul" }
+    const pedido1 = tipoDePedido.crearPedido(960, 8, 4, pedido1ColoresIncompatibles)
+    const pedido2ColoresIncompatibles = #{ "Rojo", "Azul" }
+    const pedido2 = tipoDePedido.crearPedido(960, 8, 4, pedido2ColoresIncompatibles)
+    const pedido3 = tipoDePedido.crearPedido(960, 8, 6, pedido1ColoresIncompatibles)
+    const pedido4 = tipoDePedido.crearPedido(960, 6, 4, pedido1ColoresIncompatibles)
+
+    const deportes = new Dependencia(empleados = 45)
+    deportes.agregarPedido(pedido1)
+    deportes.agregarPedido(pedido2)
+    deportes.agregarPedido(pedido3)
+    deportes.agregarPedido(pedido4)
+
+    assert.equals((4+4+6+4), deportes.totalDePasajeroEnRegistroDePedidos())
+
+    const cachito = tipoDeRodado.crearCorsa("Rojo", game.origin())
+    const corsaAzul = tipoDeRodado.crearCorsa("Azul", game.origin())
+    const corsaVerde = tipoDeRodado.crearCorsa("Verde", game.origin())
+    const kwidConTanque1 = tipoDeRodado.crearKwidConTanqueAdicional()
+    const autoEspecial = tipoDeRodado.crearRodadoEspecial(5, 160, "beige", 1200)
+    
+    deportes.agregarAFlota(cachito)
+    deportes.agregarAFlota(corsaAzul)
+    deportes.agregarAFlota(corsaVerde)
+    deportes.agregarAFlota(kwidConTanque1)
+    deportes.agregarAFlota(autoEspecial)
+    assert.equals([pedido3, pedido4], deportes.cualesDeLosPedidosNoPuedenSerSatisfechosPorLaDependencia())
+    assert.that(deportes.todosLosPedidosTienenEsteColorComoIncompatible("Azul"))
+  }
 }
